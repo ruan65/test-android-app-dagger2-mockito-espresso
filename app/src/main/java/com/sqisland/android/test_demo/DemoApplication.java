@@ -7,20 +7,21 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 public class DemoApplication extends Application {
-  @Singleton
-  @Component(modules = ClockModule.class)
-  public interface ApplicationComponent extends DemoComponent {
-  }
 
-  private final DemoComponent component = createComponent();
+    @Singleton
+    @Component(modules = ClockModule.class)
+    public interface ApplicationComponent extends DemoComponent {
+    }
 
-  protected DemoComponent createComponent() {
-    return DaggerDemoApplication_ApplicationComponent.builder()
-        .clockModule(new ClockModule())
-        .build();
-  }
+    private final DemoComponent component = createComponent();
 
-  public DemoComponent component() {
-    return component;
-  }
+    protected DemoComponent createComponent() {
+        return DaggerDemoApplication_ApplicationComponent.builder()
+                .clockModule(new ClockModule())
+                .build();
+    }
+
+    public DemoComponent component() {
+        return component;
+    }
 }

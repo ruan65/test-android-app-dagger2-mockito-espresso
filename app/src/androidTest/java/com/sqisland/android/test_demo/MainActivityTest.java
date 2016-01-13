@@ -25,49 +25,50 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
-  @Inject
-  Clock clock;
 
-  @Singleton
-  @Component(modules = MockClockModule.class)
-  public interface TestComponent extends DemoComponent {
-    void inject(MainActivityTest mainActivityTest);
-  }
+    @Inject
+    Clock clock;
 
-  @Rule
-  public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(
-      MainActivity.class,
-      true,     // initialTouchMode
-      false);   // launchActivity. False so we can customize the intent per test method
+    @Singleton
+    @Component(modules = MockClockModule.class)
+    public interface TestComponent extends DemoComponent {
+        void inject(MainActivityTest mainActivityTest);
+    }
 
-  @Before
-  public void setUp() {
-    Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-    DemoApplication app
-        = (DemoApplication) instrumentation.getTargetContext().getApplicationContext();
-    TestComponent component = (TestComponent) app.component();
-    component.inject(this);
-  }
+    @Rule
+    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(
+            MainActivity.class,
+            true,     // initialTouchMode
+            false);   // launchActivity. False so we can customize the intent per test method
 
-  @Test
-  public void today() {
-    Mockito.when(clock.getNow()).thenReturn(new DateTime(2008, 9, 23, 0, 0, 0));
+    @Before
+    public void setUp() {
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        DemoApplication app
+                = (DemoApplication) instrumentation.getTargetContext().getApplicationContext();
+        TestComponent component = (TestComponent) app.component();
+        component.inject(this);
+    }
 
-    activityRule.launchActivity(new Intent());
+    @Test
+    public void today() {
+        Mockito.when(clock.getNow()).thenReturn(new DateTime(2008, 9, 23, 0, 0, 0));
 
-    onView(withId(R.id.date))
-        .check(matches(withText("2008-09-23")));
-  }
+        activityRule.launchActivity(new Intent());
 
-  @Test
-  public void intent() {
-    DateTime dateTime = new DateTime(2014, 10, 15, 0, 0, 0);
-    Intent intent = new Intent();
-    intent.putExtra(MainActivity.KEY_MILLIS, dateTime.getMillis());
+        onView(withId(R.id.date))
+                .check(matches(withText("2008-09-23")));
+    }
 
-    activityRule.launchActivity(intent);
+    @Test
+    public void intent() {
+        DateTime dateTime = new DateTime(2014, 10, 15, 0, 0, 0);
+        Intent intent = new Intent();
+        intent.putExtra(MainActivity.KEY_MILLIS, dateTime.getMillis());
 
-    onView(withId(R.id.date))
-        .check(matches(withText("2014-10-15")));
-  }
+        activityRule.launchActivity(intent);
+
+        onView(withId(R.id.date))
+                .check(matches(withText("2014-10-15")));
+    }
 }
